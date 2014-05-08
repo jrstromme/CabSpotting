@@ -13,8 +13,8 @@ def parseForArcGIS(inputDir, inputFileName, outputDir, outputFileName):
     initialize = 1
     for line in csv.reader(file.read().splitlines()):
         if initialize == 1:
-            outputFile.write(line[0] + ',' + line[1] + ',' + line[14] + '\r')
+            outputFile.write(line[0] + ',' + line[1] + ',' + line[14] + ',' + 'type' + '\r')
             initialize = 0
         elif initialize == 0:
-            outputFile.write(line[0] + ',' + line[1] + ',' + line[14] + '\r')
-            outputFile.write(line[2] + ',' + line[3] + ',' + line[14] + '\r')
+            outputFile.write(line[0] + ',' + line[1] + ',' + line[14] + 'origin' + '\r')
+            outputFile.write(line[2] + ',' + line[3] + ',' + line[14] + 'destination' + '\r')

@@ -1,0 +1,7 @@
+DataParsing
+
+CabDataParser - This is a python script which utilizes the other python files in this directory. It has three main steps
+	1)Parse raw data with rawDataParser.py
+	2)remove irrelevant data with ShapelyRemoveOutsideSF.py
+	3)Parse into a format which can be read by arcGIS software using arcGISParser.py
+

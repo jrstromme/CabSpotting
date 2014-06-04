@@ -2,15 +2,19 @@
 
 Parses downloaded google data
 
+
+
+HAD TO REMOVE TRACTS:
+179.02
+
 '''
 import pickle
 import csv
+import datetime
 
 '''
 setup files to open/read
 '''
-
-
 
 writeFile = open('/Users/John/Documents/Carleton/Academia/Econ/Comps/Data/cabspottingdata/pubTransAlt.txt','w')
 
@@ -21,7 +25,7 @@ with open('/Users/John/Documents/Carleton/Academia/Econ/Comps/Data/cabspottingda
 FUNCTIONS
 '''
 stationList = ['Daly City', 'Balboa Park', 'Glen Park', '24th St. Mission', '16th St. Mission',	
-	          'Civic Center/UN Plaza', 'Powell St.', 'Montgomery', 'Embarcadero']
+	          'Civic Center/UN Plaza', 'Powell St.', 'Montgomery St.', 'Embarcadero', 'Colma']
 
 def getBartIndex(stationName):
 	for i in range(len(stationList)):
@@ -87,7 +91,8 @@ def parseTransitData(tripsList):
 		otherModes = []
 		
 	
-		
+		#try:
+		print str(item[1]) + '   ' + str(item[2])
 		for leg in item[0]['routes'][0]['legs'][0]['steps']:
 			if leg['travel_mode']=='TRANSIT':
 				if leg['transit_details']['line']['vehicle']['name'] == 'Bus':
@@ -130,15 +135,21 @@ def parseTransitData(tripsList):
 			',' + str(bartTime) + ',' + str(bartCost) + ',' + str(railDistance) + ',' + str(railTime) + 
 			',' + str(cableDistance) + ',' + str(cableTime) + ',' + str(walkingDistance) + ',' + str(numTransfers) +
 			',' + str(totalTime) + ',' + str(totalDistance) + ',' + str(totalPrice) + '\r')
-		print(totalPrice)
+		#print(totalPrice)
+		'''
+		except:
+			print "error at blah"
+			print str(item[1]) + '   ' + str(item[2])
+		'''
 		
-	print otherModes
+	#print otherModes
 	
 def runParserOnObject(pickledObjectFile):		
 	filehandler = open('/Users/John/Documents/Carleton/Academia/Econ/Comps/Data/cabspottingdata/' + pickledObjectFile,'r')
 	transitList = pickle.load(filehandler)
 	parseTransitData(transitList)
 
-runParserOnObject('directions204741164463.obj')
+
+runParserOnObject('25.obj')
 
 

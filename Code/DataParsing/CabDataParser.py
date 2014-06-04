@@ -22,12 +22,15 @@ def main():
     
     #1 Parse Raw Data using TaxiParse (add ID capabilities)
     rawDataParser.parseRawData(rawDataDirectory,outputDirectory,'initialParse.csv')
+    print "Finished raw data Parse"
 
     #2 Eliminate irrelevant dataPoints based on shapely (ShapelyRemoveOutliers)
     ShapelyRemoveOutsideSF.removeDataOutsideSF(outputDirectory,'initialParse.csv','cabTripData.csv',coordDirectory,"SFCoordinateLimits.csv",True)
+	print "Finished shapely remove"
 
     #3 Organize into ArcGis format with IDs
     arcGISParser.parseForArcGIS(outputDirectory, 'cabTripData.csv', outputDirectory, 'arcGISParse.csv')  
+    print "Finished arcGIS parse"
 
 main()
 

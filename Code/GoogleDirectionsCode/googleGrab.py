@@ -16,7 +16,10 @@ Steps contains information on each step
 	distance - total trip distance in miles or meters
 	duration - total time of trip
 		
-
+		
+key 1: key=AIzaSyBAPiVO2a0q7YMThYS-Begdw6GtIwLKgFU
+key 2: key=AIzaSyD256_wOceWKnrLbu5Pmwx5ixIsDc-zoU0
+key 3: key=AIzaSyAV07bp3KDBIleZ7K1_bfRhoEKLAHwmLJE
 
 '''
 
@@ -26,6 +29,8 @@ import json
 import csv
 import pickle
 import datetime
+import calendar
+import sys
 
 
 
@@ -33,34 +38,48 @@ import datetime
 '''
 Main Code
 '''
-
+#1401908400
 
 
 with open('/Users/John/Documents/Carleton/Academia/Econ/Comps/Data/cabspottingdata/areaCentroids.csv','r') as areaCentroidsFile:
+	departureTime = datetime.datetime.fromtimestamp(1401926400)
+	#departureTime = dateTime - datetime.datetime.fromtimestamp(0)
+	time = str(calendar.timegm(departureTime.utctimetuple()))
+	lst = []
 	data = [row for row in csv.reader(areaCentroidsFile.read().splitlines())]	
-	for i in range(len(data)-1):
-		if i==0:
-			for j in range(len(data[i])):
-				if data[i][j]=='latitude':
+	counter = 0
+	resumei = 24
+	for i in range(resumei,len(data)-1):
+		if i==resumei:
+			for j in range(len(data[0])):
+				if data[0][j]=='INTPTLAT':
 					latitudeIndex = j
-				elif data[i][j]=='longitude':
+				elif data[0][j]=='INTPTLON':
 					longitudeIndex = j
-				elif data[i][j]=='area':
+				elif data[0][j]=='NAME':
 					areaIndex = j
 		else:
 			area1 =  str(data[i][latitudeIndex]) + ',' + str(data[i][longitudeIndex])
 			k=i+1
 			for k in range(i+1,len(data)):
 				area2 = str(data[k][latitudeIndex]) + ',' + str(data[k][longitudeIndex])
-				time = str(1395289999)
-				url1 = 'https://maps.googleapis.com/maps/api/directions/json?origin=' + area1 + '&destination=' + area2 +  '&sensor=false&mode=transit&departure_time=' + time + "&key=AIzaSyBAPiVO2a0q7YMThYS-Begdw6GtIwLKgFU"
-				url2 = 'https://maps.googleapis.com/maps/api/directions/json?origin=' + area2 + '&destination=' + area1 +  '&sensor=false&mode=transit&departure_time=' + time + "&key=AIzaSyBAPiVO2a0q7YMThYS-Begdw6GtIwLKgFU"
-				lst.append([json.loads(requests.get(url1).text),data[i][areaIndex],data[k][areaIndex]])
-				lst.append([json.loads(requests.get(url2).text),data[k][areaIndex],data[i][areaIndex]])
+				url1 = 'https://maps.googleapis.com/maps/api/directions/json?origin=' + area1 + '&destination=' + area2 +  '&sensor=false&mode=transit&departure_time=' + time + "&key=AIzaSyBpRGckeBBuIpzOqUj5grLF5h58krsRx9U"
+				url2 = 'https://maps.googleapis.com/maps/api/directions/json?origin=' + area2 + '&destination=' + area1 +  '&sensor=false&mode=transit&departure_time=' + time + "&key=AIzaSyBpRGckeBBuIpzOqUj5grLF5h58krsRx9U"
+				if counter*4 > 756 :
+					print url1
+					print "exceeded limit, stopped on row" + str(i)
+					lstFile = open('/Users/John/Documents/Carleton/Academia/Econ/Comps/Data/cabspottingdata/directions' + str(datetime.datetime.now().time()) + '.obj', 'w')
+					pickle.dump(lst, lstFile)
+					sys.exit()
+				else:
+					lst.append([json.loads(requests.get(url1).text),data[i][areaIndex],data[k][areaIndex]])
+					lst.append([json.loads(requests.get(url2).text),data[k][areaIndex],data[i][areaIndex]])
+					counter += 1
+				print counter
+				
 
 
-lstFile = open('/Users/John/Documents/Carleton/Academia/Econ/Comps/Data/cabspottingdata/directions' + str(datetime.datetime.now().time()) + '.obj', 'w')
-pickle.dump(lst, lstFile)
+
 
 
 
